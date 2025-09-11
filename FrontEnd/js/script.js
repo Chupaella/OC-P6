@@ -24,11 +24,12 @@ async function deleteWork(id, token) {
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
 }
+
 async function addWork(formData, token) {
     const res = await fetch(`${API_BASE_URL}/works`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: formData, // FormData: { image, title, category }
+        body: formData,
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
     return res.json();
@@ -93,15 +94,19 @@ function renderFilters(categories, works) {
 ========================= */
 function setupAuthUi() {
     const token = localStorage.getItem("token");
-    const authLink = document.getElementById("nav-auth");
+    let authLink = document.getElementById("nav-auth");
+    if (!authLink) return;
+
+    // reset propre des listeners
+    const fresh = authLink.cloneNode(true);
+    authLink.parentNode.replaceChild(fresh, authLink);
+    authLink = fresh;
+
     const filtersDiv = document.getElementById("filters");
     const h2 = document.querySelector("#portfolio h2");
 
-    if (!authLink) return;
-
     if (token) {
         injectEditBanner();
-
         authLink.textContent = "logout";
         authLink.href = "#";
         authLink.addEventListener("click", (e) => {
@@ -109,7 +114,6 @@ function setupAuthUi() {
             localStorage.removeItem("token");
             window.location.href = "index.html";
         });
-
         if (filtersDiv) filtersDiv.style.display = "none";
         injectEditButton(h2);
     } else {
@@ -126,30 +130,23 @@ function injectEditBanner() {
     banner.className = "edit-banner";
     banner.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>
     <span>Mode édition</span>`;
-
     document.body.prepend(banner);
     document.body.classList.add("has-edit-banner");
 }
 
-
 function injectEditButton(h2) {
     if (!h2 || document.querySelector(".btn-edit")) return;
-    const btn = document.createElement("button"); btn.innerHTML = `
-    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Modifier`;
+    const btn = document.createElement("button");
+    btn.innerHTML = `<i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Modifier`;
     btn.className = "btn-edit";
     btn.style.marginLeft = "1rem";
     h2.appendChild(btn);
-
     btn.addEventListener("click", openModal);
 }
 
 /* =========================
    Modale (contenu + suppression)
 ========================= */
-let lastFocused = null;
-const modalEl = document.getElementById("gallery-modal");
-const closeBtn = modalEl?.querySelector(".close");
-
 function renderModalGrid(list) {
     const grid = document.getElementById("modal-grid");
     if (!grid) return;
@@ -201,17 +198,24 @@ async function onDeleteWork(id) {
 /* =========================
    Modale : ouverture / fermeture accessibles
 ========================= */
+let lastFocused = null;
+const modalEl = document.getElementById("gallery-modal");
+const closeBtn = modalEl?.querySelector(".close");
+
 function openModal() {
     if (!modalEl) return;
+    // -> par défaut on revient sur la liste
+    showListView();
+
     lastFocused = document.activeElement;
     modalEl.classList.add("open");
     modalEl.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-    document.body.classList.add("modal-open");   // 👈
     (closeBtn || modalEl).focus();
 
     if (!worksCache.length) {
-        getWorks().then(ws => { worksCache = ws; renderModalGrid(worksCache); }).catch(console.error);
+        getWorks().then(ws => { worksCache = ws; renderModalGrid(worksCache); })
+            .catch(console.error);
     } else {
         renderModalGrid(worksCache);
     }
@@ -219,31 +223,31 @@ function openModal() {
 
 function closeModal() {
     if (!modalEl) return;
+    // -> on remet la vue Liste pour la prochaine ouverture
+    showListView();
+
     if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
     modalEl.classList.remove("open");
     modalEl.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
-    document.body.classList.remove("modal-open");  // 👈
 }
-
-// fermer via overlay ou croix
+/* fermer via overlay/croix */
 modalEl?.addEventListener("click", (e) => {
     const isOverlay = e.target.hasAttribute("data-close");
     const closeAncestor = e.target.closest("[data-close]");
-    if (isOverlay || closeAncestor) {
-        e.preventDefault();
-        closeModal();
+    if (isOverlay || closeAncestor) { e.preventDefault(); closeModal(); }
+});
+
+/* fermer via Échap */
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modalEl?.classList.contains("open")) {
+        e.preventDefault(); closeModal();
     }
 });
 
-// fermer avec Échap
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modalEl?.classList.contains("open")) {
-        e.preventDefault();
-        closeModal();
-    }
-});
-// Références upload
+/* =========================
+   Upload
+========================= */
 const viewList = document.getElementById("modal-view-list");
 const viewUpload = document.getElementById("modal-view-upload");
 const btnOpenUpload = document.getElementById("btn-open-upload");
@@ -257,11 +261,9 @@ const selectCategory = document.getElementById("category");
 const btnSubmit = document.getElementById("btn-submit");
 const dropZone = document.getElementById("drop-zone");
 
-// Bascule entre les vues
 function showUploadView() {
-    // remplir les catégories si pas encore fait
     if (selectCategory && !selectCategory.dataset.ready) {
-        categoriesCache.forEach(c => {
+        categoriesCache.forEach((c) => {
             const opt = document.createElement("option");
             opt.value = String(c.id);
             opt.textContent = c.name;
@@ -278,31 +280,43 @@ function showListView() {
     clearUploadForm();
 }
 
-// Bind des boutons
 btnOpenUpload?.addEventListener("click", showUploadView);
 btnBack?.addEventListener("click", showListView);
 
-// Choisir fichier / prévisualisation
 btnChooseFile?.addEventListener("click", () => inputFile?.click());
 inputFile?.addEventListener("change", onFileChange);
 
 function onFileChange() {
     const file = inputFile.files?.[0];
     if (!file) return;
+
+    const okType = /^image\/(jpe?g|png)$/i.test(file.type);
+    const okSize = file.size <= 4 * 1024 * 1024; // 4 Mo
+
+    if (!okType) { alert("Formats autorisés : JPG/PNG."); inputFile.value = ""; return; }
+    if (!okSize) { alert("Taille max : 4 Mo."); inputFile.value = ""; return; }
+
     preview.src = URL.createObjectURL(file);
     preview.classList.remove("hidden");
+    dropZone?.classList.add("has-preview");
     validateUploadForm();
 }
 
-// Drag & drop
-["dragenter", "dragover"].forEach(evt => dropZone?.addEventListener(evt, e => {
-    e.preventDefault(); dropZone.classList.add("drag");
-}));
-["dragleave", "drop"].forEach(evt => dropZone?.addEventListener(evt, e => {
-    e.preventDefault(); dropZone.classList.remove("drag");
-}));
+
+["dragenter", "dragover"].forEach((evt) =>
+    dropZone?.addEventListener(evt, (e) => {
+        e.preventDefault();
+        dropZone.classList.add("drag");
+    })
+);
+["dragleave", "drop"].forEach((evt) =>
+    dropZone?.addEventListener(evt, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("drag");
+    })
+);
 dropZone?.addEventListener("drop", (e) => {
-    const file = [...e.dataTransfer.files].find(f => f.type.startsWith("image/"));
+    const file = [...e.dataTransfer.files].find((f) => f.type.startsWith("image/"));
     if (file) {
         const dt = new DataTransfer();
         dt.items.add(file);
@@ -311,14 +325,12 @@ dropZone?.addEventListener("drop", (e) => {
     }
 });
 
-// Validation formulaire
 formUpload?.addEventListener("input", validateUploadForm);
 function validateUploadForm() {
     const ok = inputFile.files?.length && inputTitle.value.trim() && selectCategory.value;
     if (btnSubmit) btnSubmit.disabled = !ok;
 }
 
-// Submit -> POST /works
 formUpload?.addEventListener("submit", onSubmitUpload);
 async function onSubmitUpload(e) {
     e.preventDefault();
@@ -329,25 +341,25 @@ async function onSubmitUpload(e) {
         const fd = new FormData();
         fd.append("image", inputFile.files[0]);
         fd.append("title", inputTitle.value.trim());
-        fd.append("category", selectCategory.value); // conforme au back OC
+        fd.append("category", selectCategory.value);
 
         const created = await addWork(fd, token);
-
-        // maj cache + re-render
         worksCache.push(created);
         renderModalGrid(worksCache);
         renderGallery(worksCache);
-
-        // retour à la liste + reset
         showListView();
     } catch (err) {
-        alert("Échec de l’ajout (" + err.message + ")");
+        alert("Échec de l'ajout (" + err.message + ")");
     }
 }
 
 function clearUploadForm() {
+    if (preview && preview.src.startsWith("blob:")) {
+        URL.revokeObjectURL(preview.src);
+    }
     formUpload?.reset();
     preview?.classList.add("hidden");
+    dropZone?.classList.remove("has-preview");
     if (preview) preview.src = "";
     if (btnSubmit) btnSubmit.disabled = true;
 }

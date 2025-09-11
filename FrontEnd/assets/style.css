@@ -371,6 +371,10 @@ input[type="submit"] {
 	border-radius: 60px;
 }
 
+input[type="submit"]:hover {
+	background-color: #155043;
+}
+
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
@@ -378,63 +382,82 @@ footer nav ul {
 }
 
 /* Modale */
+/* ===== Modale — baseline fiable ===== */
 .modal {
 	position: fixed;
 	inset: 0;
 	display: none;
-	z-index: 1000
+	z-index: 1000;
+	background: transparent;
+	background-color: transparent;
 }
 
 .modal.open {
-	display: block
+	display: block;
 }
+
+
+/* visible quand .open */
 
 .modal .overlay {
 	position: absolute;
 	inset: 0;
-	background: rgba(0, 0, 0, .45)
+	background: rgba(0, 0, 0, .65);
 }
+
 
 .modal .dialog {
 	position: relative;
-	max-width: 640px;
-	margin: 10vh auto;
+	width: min(630px, 92vw);
+	margin: 12vh auto;
 	background: #fff;
 	border-radius: 12px;
-	padding: 1rem;
-	box-shadow: 0 10px 40px rgba(0, 0, 0, .2)
-}
-
-.modal .top {
+	padding: 28px 32px;
+	box-shadow: 0 18px 60px rgba(0, 0, 0, .25);
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
 	align-items: center;
-	margin-bottom: .75rem
 }
 
 .modal .close {
-	font-size: 1.5rem;
-	line-height: 1;
+	position: absolute;
+	right: 16px;
+	top: 12px;
+	font-size: 22px;
+	color: #000;
+	opacity: .8;
 	border: 0;
 	background: transparent;
-	cursor: pointer
+	cursor: pointer;
+}
+
+.modal .close:hover {
+	opacity: 1;
 }
 
 /* ---- Modale : galerie ---- */
 .modal-title {
-	font-size: 1.1rem;
-	margin: 0 0 .75rem
+	font-family: 'Syne', sans-serif;
+	text-align: center;
+	font-size: 1.3rem;
+	font-weight: 700;
+	color: #000;
+	margin: 8px 0 20px;
 }
 
 .modal-sep {
-	margin: 1rem 0;
+	margin: 24px auto;
 	border: none;
-	border-top: 1px solid #eee
+	height: 1px;
+	width: 70%;
+	background: #ddd;
 }
 
 .modal-actions {
 	display: flex;
-	justify-content: center
+	justify-content: center;
+	margin-top: 24px;
+	width: 100%;
 }
 
 .btn {
@@ -446,16 +469,52 @@ footer nav ul {
 }
 
 .btn.primary {
-	border-color: #1e90ff;
-	background: #1e90ff;
-	color: #fff
+	background: #1D6154;
+	border: none;
+	color: #fff;
+	padding: 0.8rem 1.6rem;
+	border-radius: 60px;
+	font-size: 1rem;
+	font-weight: 600;
+	min-width: 240px;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.btn.primary:hover {
+	background: #155043;
 }
 
 /* Grille de vignettes */
+.modal,
+.modal * {
+	background-color: transparent;
+}
+
+.content {
+	width: 80%;
+	margin-top: -4rem;
+}
+
 .modal-grid {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
-	gap: .75rem;
+	gap: 12px;
+	width: 100%;
+}
+
+.modal-item {
+	position: relative;
+	background: #f8f8f8;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.modal-item img {
+	width: 100%;
+	height: 78px;
+	object-fit: cover;
+	display: block;
 }
 
 @media (max-width: 720px) {
@@ -464,46 +523,30 @@ footer nav ul {
 	}
 }
 
-.modal-item {
-	position: relative;
-	border: 1px solid #eee;
-	border-radius: 8px;
-	overflow: hidden;
-	background: #f8f9fb;
-}
-
-.modal-item img {
-	display: block;
-	width: 100%;
-	height: 110px;
-	object-fit: cover;
-}
-
 /* Bouton poubelle */
 .modal-trash {
 	position: absolute;
-	top: .4rem;
-	right: .4rem;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 28px;
-	height: 28px;
-	border: none;
-	border-radius: 6px;
-	background: rgba(0, 0, 0, .65);
+	top: 6px;
+	right: 6px;
+	width: 24px;
+	height: 24px;
+	border: 0;
+	border-radius: 4px;
+	background: rgba(0, 0, 0, .7);
 	color: #fff;
 	cursor: pointer;
-}
-
-.modal-trash svg {
-	width: 16px;
-	height: 16px;
-	display: block
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .modal-trash:hover {
-	background: rgba(0, 0, 0, .8)
+	background: rgba(0, 0, 0, .9);
+}
+
+.modal-trash svg {
+	width: 14px;
+	height: 14px;
 }
 
 .hidden {
@@ -540,4 +583,178 @@ footer nav ul {
 
 .preview.hidden {
 	display: none
+}
+
+/* ===== Vue Ajout (desktop) ===== */
+
+/* Titre */
+#modal-view-upload .modal-title {
+	font-family: 'Syne', sans-serif;
+	font-weight: 700;
+	font-size: 26px;
+	text-align: center;
+	margin: 8px 0 22px;
+	color: #111;
+}
+
+/* Dropzone */
+#modal-view-upload .upload-drop {
+	position: relative;
+	min-height: 210px;
+	padding: 22px 16px;
+	border: 1px solid #d7e3ec;
+	border-radius: 8px;
+	background: #eaf1f7;
+	/* bleu très clair */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+/* Icône image (affichée tant qu'il n'y a pas de preview) */
+#modal-view-upload .upload-drop::before {
+	content: "";
+	width: 88px;
+	height: 72px;
+	margin-bottom: 14px;
+	background: center / contain no-repeat url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="88" height="72" viewBox="0 0 24 24" fill="none" stroke="%2385a2b6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-7 7"/></svg>');
+}
+
+/* Bouton + Ajouter photo (pill) */
+#modal-view-upload #btn-choose-file {
+	border: 0;
+	cursor: pointer;
+	padding: .6rem 1.2rem;
+	border-radius: 999px;
+	font-weight: 700;
+	background: #dbe7f1;
+	color: #2b5f85;
+}
+
+#modal-view-upload #btn-choose-file:hover {
+	filter: brightness(0.97);
+}
+
+/* Hint (formats / taille max) */
+#modal-view-upload .hint {
+	margin-top: .45rem;
+	font-size: 12px;
+	color: #6b7a88;
+}
+
+/* Quand une image est choisie : on masque l’icône + bouton + hint,
+   et on affiche la preview grand format */
+#modal-view-upload .upload-drop.has-preview::before,
+#modal-view-upload .upload-drop.has-preview #btn-choose-file,
+#modal-view-upload .upload-drop.has-preview .hint {
+	display: none;
+}
+
+#modal-view-upload .preview {
+	display: none;
+	width: auto;
+	max-width: 100%;
+	max-height: 220px;
+	border-radius: 6px;
+}
+
+#modal-view-upload .upload-drop.has-preview .preview {
+	display: block;
+}
+
+/* Champs */
+#modal-view-upload .field {
+	width: 100%;
+}
+
+#modal-view-upload .field>span {
+	font-weight: 600;
+	color: #333;
+	margin: 18px 0 8px;
+	display: block;
+}
+
+#modal-view-upload input[type="text"],
+#modal-view-upload select {
+	height: 52px;
+	padding: 0 14px;
+	border: none;
+	border-radius: 8px;
+	background: #fff;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	font-size: 15px;
+	color: #222;
+	appearance: none;
+}
+
+/* Petite flèche du select */
+#modal-view-upload select {
+	background-image: url("data:image/svg+xml;utf8,<svg fill='none' stroke='%23999' stroke-width='1.5' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6'/></svg>");
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+}
+
+/* Séparateur comme la maquette */
+#modal-view-upload .modal-sep {
+	height: 1px;
+	border: none;
+	background: #e3e3e3;
+	width: 90%;
+	margin: 30px auto 18px;
+}
+
+/* Bouton Valider (gris disabled → vert enabled) */
+#modal-view-upload .modal-actions {
+	width: 100%;
+	justify-content: center;
+}
+
+#modal-view-upload #btn-submit {
+	border: 0;
+	min-width: 320px;
+	padding: .9rem 1.6rem;
+	border-radius: 999px;
+	font-weight: 700;
+	letter-spacing: .2px;
+	color: #fff;
+}
+
+#modal-view-upload #btn-submit:disabled {
+	background: #b8b8b8;
+	cursor: not-allowed;
+}
+
+#modal-view-upload #btn-submit:not(:disabled) {
+	background: #1D6154;
+	cursor: pointer;
+}
+
+#modal-view-upload #btn-submit:not(:disabled):hover {
+	filter: brightness(1.06);
+}
+
+/* Bouton Retour (option : look “texte”) */
+#modal-view-upload #btn-back {
+	background: transparent;
+	border: none;
+	color: #3a3a3a;
+	font-weight: 600;
+	cursor: pointer;
+	padding: .6rem 0;
+	margin-right: auto;
+	/* le place à gauche */
+}
+
+#login-form h2,
+#login-form p {
+	text-align: center;
+}
+
+.form-error {
+	color: #b00020;
+	font-size: 0.9rem;
+	margin-top: 2rem;
+	text-align: center;
 }

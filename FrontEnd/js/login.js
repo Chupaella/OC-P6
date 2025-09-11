@@ -5,6 +5,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
+    const errorEl = document.getElementById("login-error");
+    errorEl.classList.add("hidden"); // reset
 
     try {
         const res = await fetch(`${API_BASE_URL}/users/login`, {
@@ -14,20 +16,16 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
         });
 
         if (!res.ok) {
-            alert("Email ou mot de passe incorrect");
+            errorEl.textContent = "Email ou mot de passe incorrect";
+            errorEl.classList.remove("hidden");
             return;
         }
 
         const data = await res.json();
-        console.log("✅ Login réussi :", data);
-
-        // Stocker le token pour les requêtes protégées
         localStorage.setItem("token", data.token);
-
-        // Rediriger vers la page principale
         window.location.href = "index.html";
     } catch (err) {
-        console.error("Erreur login:", err);
-        alert("Un problème est survenu, réessaie.");
+        errorEl.textContent = "Un problème est survenu, réessaie.";
+        errorEl.classList.remove("hidden");
     }
 });
