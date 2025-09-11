@@ -197,7 +197,6 @@ li:hover {
 	color: #B1663C;
 }
 
-/* Bandeau mode édition (plein écran, centré) */
 .edit-banner {
 	position: fixed;
 	left: 0;
@@ -209,26 +208,21 @@ li:hover {
 	justify-content: center;
 	gap: .5rem;
 	background: #000;
-	/* <- garder le fond noir */
 	color: #fff;
 	padding: .6rem 1rem;
 	font-size: .95rem;
 }
 
-/* Icône (Font Awesome) */
 .edit-banner i {
 	font-size: 0.9rem;
-	/* taille de l'icône */
 	line-height: 1;
 	background-color: transparent;
 }
 
-/* Le reset met un fond crème sur <span> ; on neutralise ici */
 .edit-banner span {
 	background-color: transparent;
 }
 
-/* Quand le bandeau est présent, éviter qu'il recouvre le header */
 .has-edit-banner {
 	padding-top: 44px;
 }
@@ -381,30 +375,23 @@ footer nav ul {
 	margin: 2em
 }
 
-/* Modale */
-/* ===== Modale — baseline fiable ===== */
 .modal {
 	position: fixed;
 	inset: 0;
 	display: none;
 	z-index: 1000;
 	background: transparent;
-	background-color: transparent;
 }
 
 .modal.open {
 	display: block;
 }
 
-
-/* visible quand .open */
-
 .modal .overlay {
 	position: absolute;
 	inset: 0;
 	background: rgba(0, 0, 0, .65);
 }
-
 
 .modal .dialog {
 	position: relative;
@@ -435,7 +422,6 @@ footer nav ul {
 	opacity: 1;
 }
 
-/* ---- Modale : galerie ---- */
 .modal-title {
 	font-family: 'Syne', sans-serif;
 	text-align: center;
@@ -465,7 +451,7 @@ footer nav ul {
 	border: 1px solid #ccc;
 	border-radius: 8px;
 	background: #fff;
-	cursor: pointer
+	cursor: pointer;
 }
 
 .btn.primary {
@@ -477,7 +463,6 @@ footer nav ul {
 	font-size: 1rem;
 	font-weight: 600;
 	min-width: 240px;
-	cursor: pointer;
 	transition: background 0.2s ease;
 }
 
@@ -485,7 +470,6 @@ footer nav ul {
 	background: #155043;
 }
 
-/* Grille de vignettes */
 .modal,
 .modal * {
 	background-color: transparent;
@@ -517,13 +501,6 @@ footer nav ul {
 	display: block;
 }
 
-@media (max-width: 720px) {
-	.modal-grid {
-		grid-template-columns: repeat(3, 1fr)
-	}
-}
-
-/* Bouton poubelle */
 .modal-trash {
 	position: absolute;
 	top: 6px;
@@ -550,44 +527,16 @@ footer nav ul {
 }
 
 .hidden {
-	display: none
+	display: none;
 }
 
 .field {
 	display: flex;
 	flex-direction: column;
 	gap: .25rem;
-	margin: .75rem 0
+	margin: .75rem 0;
 }
 
-.upload-drop {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: .5rem;
-	min-height: 160px;
-	border: 2px dashed #bbb;
-	border-radius: 10px;
-	background: #f8fafc;
-	margin: .5rem 0 1rem;
-}
-
-.upload-drop.drag {
-	background: #eef6ff;
-	border-color: #1e90ff
-}
-
-.preview {
-	max-height: 180px
-}
-
-.preview.hidden {
-	display: none
-}
-
-/* ===== Vue Ajout (desktop) ===== */
-
-/* Titre */
 #modal-view-upload .modal-title {
 	font-family: 'Syne', sans-serif;
 	font-weight: 700;
@@ -597,7 +546,6 @@ footer nav ul {
 	color: #111;
 }
 
-/* Dropzone */
 #modal-view-upload .upload-drop {
 	position: relative;
 	min-height: 210px;
@@ -605,7 +553,6 @@ footer nav ul {
 	border: 1px solid #d7e3ec;
 	border-radius: 8px;
 	background: #eaf1f7;
-	/* bleu très clair */
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -613,16 +560,19 @@ footer nav ul {
 	overflow: hidden;
 }
 
-/* Icône image (affichée tant qu'il n'y a pas de preview) */
+.upload-drop.drag {
+	background: #eef6ff;
+	border-color: #1e90ff;
+}
+
 #modal-view-upload .upload-drop::before {
 	content: "";
 	width: 88px;
 	height: 72px;
 	margin-bottom: 14px;
-	background: center / contain no-repeat url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="88" height="72" viewBox="0 0 24 24" fill="none" stroke="%2385a2b6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-7 7"/></svg>');
+	background: center/contain no-repeat url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="88" height="72" viewBox="0 0 24 24" fill="none" stroke="%2385a2b6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-7 7"/></svg>');
 }
 
-/* Bouton + Ajouter photo (pill) */
 #modal-view-upload #btn-choose-file {
 	border: 0;
 	cursor: pointer;
@@ -637,19 +587,10 @@ footer nav ul {
 	filter: brightness(0.97);
 }
 
-/* Hint (formats / taille max) */
 #modal-view-upload .hint {
 	margin-top: .45rem;
 	font-size: 12px;
 	color: #6b7a88;
-}
-
-/* Quand une image est choisie : on masque l’icône + bouton + hint,
-   et on affiche la preview grand format */
-#modal-view-upload .upload-drop.has-preview::before,
-#modal-view-upload .upload-drop.has-preview #btn-choose-file,
-#modal-view-upload .upload-drop.has-preview .hint {
-	display: none;
 }
 
 #modal-view-upload .preview {
@@ -660,11 +601,16 @@ footer nav ul {
 	border-radius: 6px;
 }
 
+#modal-view-upload .upload-drop.has-preview::before,
+#modal-view-upload .upload-drop.has-preview #btn-choose-file,
+#modal-view-upload .upload-drop.has-preview .hint {
+	display: none;
+}
+
 #modal-view-upload .upload-drop.has-preview .preview {
 	display: block;
 }
 
-/* Champs */
 #modal-view-upload .field {
 	width: 100%;
 }
@@ -689,14 +635,12 @@ footer nav ul {
 	appearance: none;
 }
 
-/* Petite flèche du select */
 #modal-view-upload select {
 	background-image: url("data:image/svg+xml;utf8,<svg fill='none' stroke='%23999' stroke-width='1.5' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6'/></svg>");
 	background-repeat: no-repeat;
 	background-position: right 14px center;
 }
 
-/* Séparateur comme la maquette */
 #modal-view-upload .modal-sep {
 	height: 1px;
 	border: none;
@@ -705,7 +649,6 @@ footer nav ul {
 	margin: 30px auto 18px;
 }
 
-/* Bouton Valider (gris disabled → vert enabled) */
 #modal-view-upload .modal-actions {
 	width: 100%;
 	justify-content: center;
@@ -735,7 +678,6 @@ footer nav ul {
 	filter: brightness(1.06);
 }
 
-/* Bouton Retour (option : look “texte”) */
 #modal-view-upload #btn-back {
 	background: transparent;
 	border: none;
@@ -744,7 +686,6 @@ footer nav ul {
 	cursor: pointer;
 	padding: .6rem 0;
 	margin-right: auto;
-	/* le place à gauche */
 }
 
 #login-form h2,

@@ -1,5 +1,5 @@
 const API_BASE_URL = "http://localhost:5678/api";
-let worksCache = []; // stocke la liste courante pour la galerie + modale
+let worksCache = [];
 let categoriesCache = [];
 
 /* =========================
@@ -97,7 +97,6 @@ function setupAuthUi() {
     let authLink = document.getElementById("nav-auth");
     if (!authLink) return;
 
-    // reset propre des listeners
     const fresh = authLink.cloneNode(true);
     authLink.parentNode.replaceChild(fresh, authLink);
     authLink = fresh;
@@ -204,7 +203,6 @@ const closeBtn = modalEl?.querySelector(".close");
 
 function openModal() {
     if (!modalEl) return;
-    // -> par défaut on revient sur la liste
     showListView();
 
     lastFocused = document.activeElement;
@@ -223,7 +221,6 @@ function openModal() {
 
 function closeModal() {
     if (!modalEl) return;
-    // -> on remet la vue Liste pour la prochaine ouverture
     showListView();
 
     if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
@@ -231,14 +228,13 @@ function closeModal() {
     modalEl.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
 }
-/* fermer via overlay/croix */
+
 modalEl?.addEventListener("click", (e) => {
     const isOverlay = e.target.hasAttribute("data-close");
     const closeAncestor = e.target.closest("[data-close]");
     if (isOverlay || closeAncestor) { e.preventDefault(); closeModal(); }
 });
 
-/* fermer via Échap */
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && modalEl?.classList.contains("open")) {
         e.preventDefault(); closeModal();
@@ -291,7 +287,7 @@ function onFileChange() {
     if (!file) return;
 
     const okType = /^image\/(jpe?g|png)$/i.test(file.type);
-    const okSize = file.size <= 4 * 1024 * 1024; // 4 Mo
+    const okSize = file.size <= 4 * 1024 * 1024;
 
     if (!okType) { alert("Formats autorisés : JPG/PNG."); inputFile.value = ""; return; }
     if (!okSize) { alert("Taille max : 4 Mo."); inputFile.value = ""; return; }

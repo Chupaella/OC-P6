@@ -6,7 +6,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
     const errorEl = document.getElementById("login-error");
-    errorEl.classList.add("hidden"); // reset
+    errorEl.classList.add("hidden");
 
     try {
         const res = await fetch(`${API_BASE_URL}/users/login`, {
